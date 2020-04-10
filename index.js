@@ -1,6 +1,9 @@
 const puppeteer = require('puppeteer');
 const logindetails = require('./logindetails');
 
+const myDate = process.argv[2];
+console.log(myDate);
+
 (async () => {
   const browser = await puppeteer.launch({
     // headless: false,
@@ -45,16 +48,17 @@ const logindetails = require('./logindetails');
   page.on('response', async (response) => {
     if (response.url() === 'https://barbora.lt/api/eshop/v1/cart/deliveries') {
         const res = await response.json();
-        const deliveries = (res.deliveries)[0].params.matrix;
-        deliveries.forEach(day => day.hours.forEach(time => time.available ? available.push(time) : ''));
-        console.log('Available deliveries: ' + available.length)
-        if (available.length) {
-          await page.screenshot({ path: './screenshots/screenshot.png' });
-          await Promise.all([
-            page.click('.b-deliverytime--slot-available'),
-            // browser.close()
-          ]);
+        const deliveries = (res.deliveries)[0].params.matrix.filter(day => day.id == myDate);
+        if (deliveries.length) {
+          deliveries.hours.forEach(time => time.available ? available.push(time) : '');          
+          if (available.length) {
+            await page.screenshot({ path: './screenshots/screenshot.png' });
+            await Promise.all([
+              page.click('.b-deliverytime--slot-available'),
+            ]);
+          }
         }
+        console.log('Available deliveries: ' + available.length)
     }
   });
   

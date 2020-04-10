@@ -1,3 +1,3 @@
-if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && exit
-node index.js
-exit
+@echo off
+set /P mydate=Enter date: 
+node index.js %mydate%
