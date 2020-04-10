@@ -61,7 +61,7 @@ const logindetails = require('./logindetails');
   while (!available.length) {
 	  console.log(new Date() + ' checking site...')
       await page.reload()
-      await page.waitFor(60000)
+      await page.waitFor(300000)
 }
   
 
